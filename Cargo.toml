@@ -1,0 +1,4 @@
+[package]
+name = "craigslist-scraper"
+version = "0.1.0"
+authors = ["Dylan Johnson <dylanatasmsa@gmail.com>"]
