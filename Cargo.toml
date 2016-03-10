@@ -2,3 +2,7 @@
 name = "craigslist-scraper"
 version = "0.1.0"
 authors = ["Dylan Johnson <dylanatasmsa@gmail.com>"]
+
+[dependencies]
+html5ever = "0.5.3"
+hyper = "0.7.2"
