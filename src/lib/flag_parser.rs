@@ -3,7 +3,7 @@ use getopts::Options;
 pub struct FlagParser {
     location: String,
     topic: String,
-    pub search_url: String
+    search_url: String
 }
 
 impl FlagParser {
@@ -16,7 +16,7 @@ impl FlagParser {
         let loc = matches.opt_str("l").unwrap();
         let topic = matches.opt_str("t").unwrap();
         let query = matches.opt_strs("q").join("&");
-        let search_url = format!("{location}.craigslist.org/search/{topic}?{query}", location=loc, topic=topic, query=query);
+        let search_url = format!("https://{location}.craigslist.org/search/{topic}?{query}", location=loc, topic=topic, query=query);
         FlagParser {
             location: loc,
             topic: topic,
@@ -25,7 +25,11 @@ impl FlagParser {
     }
 
     pub fn make_post_url(&self, id: &String) -> String {
-        format!("{location}.craigslist.org/{topic}/{id}.html", location=self.location, topic=self.topic, id=id)
+        format!("https://{location}.craigslist.org/{topic}/{id}.html", location=self.location, topic=self.topic, id=id)
+    }
+
+    pub fn get_search_url(&self) -> &String {
+        &self.search_url
     }
 }
 
