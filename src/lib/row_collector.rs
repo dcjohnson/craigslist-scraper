@@ -56,12 +56,12 @@ mod collector {
             } && tag.name.as_ref() == TARGET_TAG {
                 for attr in tag.attrs.iter() {
                     if attr.name.local.as_ref() == TARGET_ATTR {
-                        return Some(String::from_str(attr.value.as_ref()).unwrap())
+                        return Some(String::from_str(attr.value.as_ref()).unwrap());
                     }
                 }
             }
 
-            return None
+            return None;
         }
 
         fn is_tag_token(&self, token: &Token) -> bool {
