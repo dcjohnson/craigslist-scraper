@@ -10,15 +10,6 @@ use tendril::StrTendril;
 
 use html5ever::tokenizer::{Tokenizer, TokenizerOpts};
 
-fn get_html(url: &str) -> StrTendril {
-    let mut res = Client::new().get(url)
-        .header(Connection::close()).send().unwrap();
-    let mut body = String::new();
-    res.read_to_string(&mut body).unwrap();
-    let input = StrTendril::try_from_byte_slice(body.as_bytes()).unwrap();
-    input.try_reinterpret().unwrap()
-}
-
 pub fn get_rows(url: &str) -> Vec<String> {
     let mut tok = Tokenizer::new(collector::RowCollector::new(), TokenizerOpts {
         .. Default::default()
@@ -26,6 +17,15 @@ pub fn get_rows(url: &str) -> Vec<String> {
     tok.feed(get_html(url));
     tok.end();
     tok.unwrap().rows
+}
+
+fn get_html(url: &str) -> StrTendril {
+    let mut res = Client::new().get(url)
+        .header(Connection::close()).send().unwrap();
+    let mut body = String::new();
+    res.read_to_string(&mut body).unwrap();
+    let input = StrTendril::try_from_byte_slice(body.as_bytes()).unwrap();
+    input.try_reinterpret().unwrap()
 }
 
 mod collector {
@@ -60,18 +60,29 @@ mod collector {
 
             return None
         }
+
+        fn is_tag_token(&self, token: &Token) -> bool {
+            match *token {
+                TagToken(_) => true,
+                _ => false
+            }
+        }
+
+        fn get_tag_token(&self, token: Token) -> Tag {
+            match token {
+                TagToken(tag) => tag,
+                _ => panic!()
+            }
+        }
     }
 
     impl TokenSink for RowCollector {
         fn process_token(&mut self, token: Token) {
-            match token {
-                TagToken(tag) => {
-                    let url = self.get_url(tag);
-                    if url.is_some() {
-                        self.rows.push(url.unwrap());
-                    }
+            if self.is_tag_token(&token) {
+                let url = self.get_url(self.get_tag_token(token));
+                if url.is_some() {
+                    self.rows.push(url.unwrap());
                 }
-                _ => { }
             }
         }
     }
