@@ -1,14 +1,9 @@
-extern crate html5ever;
-extern crate hyper;
+extern crate lib;
 
-use std::io::Read;
-use hyper::Client;
-use hyper::header::Connection;
+use lib::row_collector;
 
 fn main() {
-  let mut res = Client::new().get("https://provo.craigslist.org/search/roo?sort=date")
-    .header(Connection::close()).send().unwrap();
-  let mut body = String::new();
-  res.read_to_string(&mut body).unwrap();
-  println!("{}", body);
+    for row in row_collector::get_rows("https://provo.craigslist.org/search/roo?sort=date").iter() {
+        println!("{}", row)
+    }
 }
