@@ -12,7 +12,7 @@ use html5ever::tokenizer::{Tokenizer, TokenizerOpts};
 
 fn get_html(url: &str) -> StrTendril {
     let mut res = Client::new().get(url)
-      .header(Connection::close()).send().unwrap();
+        .header(Connection::close()).send().unwrap();
     let mut body = String::new();
     res.read_to_string(&mut body).unwrap();
     let input = StrTendril::try_from_byte_slice(body.as_bytes()).unwrap();
