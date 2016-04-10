@@ -35,6 +35,9 @@ mod collector {
     use html5ever::tokenizer::{TokenSink, Token, Tag};
     use html5ever::tokenizer::{TagToken, StartTag, EndTag};
 
+    static TARGET_TAG: &'static str = "p";
+    static TARGET_ATTR: &'static str = "data-pid";
+
     pub struct RowCollector {
         pub rows: Vec<String>
     }
@@ -50,9 +53,9 @@ mod collector {
             if match tag.kind {
                 StartTag => true,
                 EndTag => false
-            } && tag.name.as_ref() == "p" {
+            } && tag.name.as_ref() == TARGET_TAG {
                 for attr in tag.attrs.iter() {
-                    if attr.name.local.as_ref() == "data-pid" {
+                    if attr.name.local.as_ref() == TARGET_ATTR {
                         return Some(String::from_str(attr.value.as_ref()).unwrap())
                     }
                 }
