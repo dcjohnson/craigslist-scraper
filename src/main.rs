@@ -2,24 +2,40 @@ extern crate lib;
 extern crate getopts;
 
 use std::env;
+use std::thread;
+use std::time::Duration;
 
 use lib::row_collector;
-use lib::url;
+use lib::url::Url;
 
 use getopts::Options;
 use getopts::Matches;
 
 fn main() {
     let matches = get_options(env::args().collect());
+    let dur = if matches.opt_present("d") {
+        matches.opt_default("d", "5").unwrap().parse::<u64>().unwrap()
+    } else {
+        5
+    } * 60;
     let loc = matches.opt_str("l").unwrap();
     let topic = matches.opt_str("t").unwrap();
     let query = matches.opt_strs("q").join("&");
+    let url = Url::new(loc, topic, query);
+    let mut ids: Vec<String> = Vec::new();
 
-    let fp = url::Url::new(loc, topic, query);
-    for row in row_collector::get_rows(fp.get_search_url()).iter() {
-        println!("{} {}", row, fp.make_post_url(row));
+    loop {
+        let new_ids = row_collector::get_rows(url.get_search_url());
+        for id in new_ids.iter() {
+            if ids.len() == 0 || id.as_str() == ids.first().unwrap().as_str() {
+                break
+            } else {
+                println!("{}", url.make_post_url(id));
+            }
+        }
+        ids = new_ids;
+        thread::sleep(Duration::new(dur, 0));
     }
-    println!("{}", fp.get_search_url());
 }
 
 fn get_options(args: Vec<String>) -> Matches {
