@@ -1,10 +1,9 @@
 use std::vec::Vec;
+use std::io::Read;
+use std::default::Default;
 
 use hyper::Client;
 use hyper::header::Connection;
-
-use std::io::Read;
-use std::default::Default;
 
 use tendril::StrTendril;
 
