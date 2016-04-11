@@ -15,7 +15,8 @@ impl Url {
     }
 
     pub fn make_post_url(&self, id: &String) -> String {
-        format!("https://{location}.craigslist.org/{topic}/{id}.html", location=self.location, topic=self.topic, id=id)
+        // the angle brackets are so that it shows up in slack as a link
+        format!("<https://{location}.craigslist.org/{topic}/{id}.html>", location=self.location, topic=self.topic, id=id)
     }
 
     pub fn get_search_url(&self) -> &String {
