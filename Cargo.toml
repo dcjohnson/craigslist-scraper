@@ -5,6 +5,7 @@ authors = ["Dylan Johnson <dylanatasmsa@gmail.com>"]
 description = "A webscraper for Craiglist. You can use this to send updates of a craigslist page to Slack."
 readme = "README.md"
 license-file="LICENSE"
+repository = "https://github.com/dcjohnson/craigslist-scraper"
 
 [dependencies]
 hyper = "0.7.2"
