@@ -8,11 +8,16 @@ use std::time::Duration;
 use lib::row_collector;
 use lib::url::Url;
 use getopts::Options;
-use getopts::Matches;
 use slack::RtmClient;
 
 fn main() {
-    let matches = get_options(env::args().collect());
+    let args: Vec<String> = env::args().collect();
+    let options = get_options();
+    if args.len() == 1 {
+        println!("{}", options.usage("Scraper usage"));
+        std::process::exit(0);
+    }
+    let matches = options.parse(&args[1..]).unwrap();
     let dur = if matches.opt_present("d") {
         matches.opt_default("d", "5").unwrap().parse::<u64>().unwrap()
     } else {
@@ -48,13 +53,13 @@ fn main() {
     }
 }
 
-fn get_options(args: Vec<String>) -> Matches {
+fn get_options() -> Options {
     let mut opts = Options::new();
     opts.reqopt("l", "location", "<location>.craigslist.org", "provo");
     opts.reqopt("t", "topic", "provo.craigslist.org/search/<topic>", "roo");
     opts.reqopt("b", "bot-token", "slack bot token", "");
     opts.reqopt("c", "post-channel", "slack channel to post to", "#<channel>");
     opts.optmulti("q", "query", "provo.craigslist.org/search/roo?<query>", "sort=priceasc");
-    opts.optopt("d", "duration", "interval that the scrapes are made at", "");
-    opts.parse(&args[1..]).unwrap()
+    opts.optopt("d", "duration", "interval that the scrapes are made at", "1min mininum");
+    opts
 }

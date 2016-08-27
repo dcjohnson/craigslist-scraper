@@ -2,6 +2,9 @@
 name = "craigslist-scraper"
 version = "0.1.0"
 authors = ["Dylan Johnson <dylanatasmsa@gmail.com>"]
+description = "A webscraper for Craiglist. You can use this to send updates of a craigslist page to Slack."
+readme = "README.md"
+license-file="LICENSE"
 
 [dependencies]
 hyper = "0.7.2"
