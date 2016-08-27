@@ -1,6 +1,5 @@
 extern crate lib;
 extern crate getopts;
-extern crate rustc_serialize;
 extern crate slack;
 
 use std::env;
@@ -19,9 +18,7 @@ fn main() {
     } else {
         5
     } * 60;
-    let url = Url::new(matches.opt_str("l").unwrap(),
-                       matches.opt_str("t").unwrap(),
-                       matches.opt_strs("q").join("&"));
+    let url = Url::new(matches.opt_str("l").unwrap(), matches.opt_str("t").unwrap(), matches.opt_strs("q").join("&"));
     let channel = format!("#{}", matches.opt_str("c").unwrap().as_str());
     let mut slack_client = RtmClient::new(matches.opt_str("b").unwrap().as_str());
     let login_result = slack_client.login();
@@ -56,14 +53,8 @@ fn get_options(args: Vec<String>) -> Matches {
     opts.reqopt("l", "location", "<location>.craigslist.org", "provo");
     opts.reqopt("t", "topic", "provo.craigslist.org/search/<topic>", "roo");
     opts.reqopt("b", "bot-token", "slack bot token", "");
-    opts.reqopt("c",
-                "post-channel",
-                "slack channel to post to",
-                "#<channel>");
-    opts.optmulti("q",
-                  "query",
-                  "provo.craigslist.org/search/roo?<query>",
-                  "sort=priceasc");
+    opts.reqopt("c", "post-channel", "slack channel to post to", "#<channel>");
+    opts.optmulti("q", "query", "provo.craigslist.org/search/roo?<query>", "sort=priceasc");
     opts.optopt("d", "duration", "interval that the scrapes are made at", "");
     opts.parse(&args[1..]).unwrap()
 }

@@ -1,17 +1,15 @@
 use std::vec::Vec;
 use std::io::Read;
 use std::default::Default;
-
 use hyper::Client;
 use hyper::header::Connection;
-
 use tendril::StrTendril;
-
 use html5ever::tokenizer::{Tokenizer, TokenizerOpts};
 
 pub fn get_rows(url: &str) -> Vec<String> {
-    let mut tok = Tokenizer::new(collector::RowCollector::new(),
-                                 TokenizerOpts { ..Default::default() });
+    let mut tok = Tokenizer::new(collector::RowCollector::new(), TokenizerOpts {
+        ..Default::default()
+    });
     tok.feed(get_html(url));
     tok.end();
     tok.unwrap().rows
@@ -32,7 +30,6 @@ fn get_html(url: &str) -> StrTendril {
 mod collector {
     use std::vec::Vec;
     use std::str::FromStr;
-
     use html5ever::tokenizer::{TokenSink, Token, Tag};
     use html5ever::tokenizer::{TagToken, StartTag, EndTag};
 
