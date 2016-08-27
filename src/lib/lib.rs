@@ -5,4 +5,3 @@ extern crate rustc_serialize;
 
 pub mod row_collector;
 pub mod url;
-pub mod slack;

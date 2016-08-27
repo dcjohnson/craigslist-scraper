@@ -10,17 +10,19 @@ use tendril::StrTendril;
 use html5ever::tokenizer::{Tokenizer, TokenizerOpts};
 
 pub fn get_rows(url: &str) -> Vec<String> {
-    let mut tok = Tokenizer::new(collector::RowCollector::new(), TokenizerOpts {
-        .. Default::default()
-    });
+    let mut tok = Tokenizer::new(collector::RowCollector::new(),
+                                 TokenizerOpts { ..Default::default() });
     tok.feed(get_html(url));
     tok.end();
     tok.unwrap().rows
 }
 
 fn get_html(url: &str) -> StrTendril {
-    let mut res = Client::new().get(url)
-        .header(Connection::close()).send().unwrap();
+    let mut res = Client::new()
+        .get(url)
+        .header(Connection::close())
+        .send()
+        .unwrap();
     let mut body = String::new();
     res.read_to_string(&mut body).unwrap();
     let input = StrTendril::try_from_byte_slice(body.as_bytes()).unwrap();
@@ -38,20 +40,18 @@ mod collector {
     static TARGET_ATTR: &'static str = "data-pid";
 
     pub struct RowCollector {
-        pub rows: Vec<String>
+        pub rows: Vec<String>,
     }
 
     impl RowCollector {
         pub fn new() -> Self {
-            RowCollector {
-                rows: Vec::new(),
-            }
+            RowCollector { rows: Vec::new() }
         }
 
         fn get_url(&self, tag: Tag) -> Option<String> {
             if match tag.kind {
                 StartTag => true,
-                EndTag => false
+                EndTag => false,
             } && tag.name.as_ref() == TARGET_TAG {
                 for attr in tag.attrs.iter() {
                     if attr.name.local.as_ref() == TARGET_ATTR {
@@ -66,14 +66,14 @@ mod collector {
         fn is_tag_token(&self, token: &Token) -> bool {
             match *token {
                 TagToken(_) => true,
-                _ => false
+                _ => false,
             }
         }
 
         fn get_tag_token(&self, token: Token) -> Tag {
             match token {
                 TagToken(tag) => tag,
-                _ => panic!()
+                _ => panic!(),
             }
         }
     }

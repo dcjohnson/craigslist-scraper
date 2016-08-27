@@ -9,6 +9,7 @@ html5ever = "0.5.3"
 tendril = "0.2.2"
 getopts = "0.2"
 rustc-serialize = "0.3.19"
+slack = "0.15.0"
 
 [lib]
 name = "lib"
